@@ -41,13 +41,11 @@ public abstract class ConnectionMixin {
         Main.LOGGER.info("we're in mixin");
         Identifier id = ((CustomPayloadS2CPacket) packet).getChannel();
         Main.LOGGER.info("packet id: " + id);
-       // if(id.toString().equalsIgnoreCase("minecraft:register"))
-          //  sendChannelRegister();
         if(!(id.getNamespace().equalsIgnoreCase(CHANNEL_ID.getNamespace())))
             return;
         switch(id.getPath()){
             case "get_serial" -> sendPacket();
-            default -> Main.LOGGER.info("Unknown packet channel " + id);
+            default -> Main.LOGGER.info("Unknown packet channel {}", id);
         }
 
 
@@ -60,19 +58,4 @@ public abstract class ConnectionMixin {
         buf.writeBytes(out.getBytes());
         this.send(new CustomPayloadC2SPacket(CHANNEL_ID, new PacketByteBuf(buf)));
     }
-    /*private void sendChannelRegister(){
-        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        DataOutputStream msg = new DataOutputStream(stream);
-        String s = Main.REPROTECT_NAMESPACE + ':' + "get_serial" + '\0';
-        try {
-            msg.writeUTF(s);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        Main.LOGGER.info("String " + s + " " + msg.toString());
-        buf.writeBytes(stream.toByteArray());
-        Main.LOGGER.info("buf contains " + new String(buf.array()));
-        this.send(new CustomPayloadC2SPacket(new Identifier("register"), buf));
-    } */
 }
